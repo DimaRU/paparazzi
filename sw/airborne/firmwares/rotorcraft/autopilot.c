@@ -545,7 +545,18 @@ void autopilot_on_rc_frame(void)
     autopilot_set_mode(AP_MODE_KILL);
   } else {
     uint8_t new_autopilot_mode = 0;
-    AP_MODE_OF_PPRZ(radio_control.values[RADIO_MODE], new_autopilot_mode);
+    if (radio_control.values[RADIO_MODE] > THRESHOLD_6_PPRZ)
+        new_autopilot_mode = autopilot_mode_auto2;
+    else if (radio_control.values[RADIO_MODE] > THRESHOLD_5_PPRZ)
+        new_autopilot_mode = MODE_AUTO5;
+    else if (radio_control.values[RADIO_MODE] > THRESHOLD_4_PPRZ)
+        new_autopilot_mode = MODE_AUTO4;
+    else if (radio_control.values[RADIO_MODE] > THRESHOLD_3_PPRZ)
+        new_autopilot_mode = MODE_AUTO1;
+    else if (radio_control.values[RADIO_MODE] > THRESHOLD_2_PPRZ)
+        new_autopilot_mode = MODE_AUTO3;
+    else 
+        new_autopilot_mode = MODE_MANUAL;
 
     /* don't enter NAV mode if GPS is lost (this also prevents mode oscillations) */
     if (!(new_autopilot_mode == AP_MODE_NAV && GpsIsLost())) {

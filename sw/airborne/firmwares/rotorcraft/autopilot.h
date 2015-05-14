@@ -84,19 +84,23 @@ extern uint16_t autopilot_flight_time;
 #ifndef MODE_AUTO2
 #define MODE_AUTO2 AP_MODE_NAV
 #endif
+#ifndef MODE_AUTO3
+#define MODE_AUTO3 AP_MODE_ATTITUDE_DIRECT
+#endif
+#ifndef MODE_AUTO4
+#define MODE_AUTO4 AP_MODE_HOVER_Z_HOLD
+#endif
+#ifndef MODE_AUTO5
+#define MODE_AUTO5 AP_MODE_HOVER_Z_HOLD
+#endif
 
 
-#define THRESHOLD_1_PPRZ (MIN_PPRZ / 2)
-#define THRESHOLD_2_PPRZ (MAX_PPRZ / 2)
-
-#define AP_MODE_OF_PPRZ(_rc, _mode) {    \
-    if      (_rc > THRESHOLD_2_PPRZ)     \
-      _mode = autopilot_mode_auto2;      \
-    else if (_rc > THRESHOLD_1_PPRZ)     \
-      _mode = MODE_AUTO1;                \
-    else                                 \
-      _mode = MODE_MANUAL;               \
-  }
+#define THRESHOLD_1_PPRZ (MIN_PPRZ / 1)
+#define THRESHOLD_2_PPRZ (MIN_PPRZ / 2)
+#define THRESHOLD_3_PPRZ (MIN_PPRZ / 3)
+#define THRESHOLD_4_PPRZ (MIN_PPRZ / 11)
+#define THRESHOLD_5_PPRZ (MAX_PPRZ / 9)
+#define THRESHOLD_6_PPRZ (MAX_PPRZ / 3)
 
 #define autopilot_KillThrottle(_kill) { \
     if (_kill)                          \
