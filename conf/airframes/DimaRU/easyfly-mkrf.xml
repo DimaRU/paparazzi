@@ -88,8 +88,6 @@
     <set servo="LEFT"   value="motor_mixing.commands[3]"/>
   </command_laws>
 
-  <include href="conf/airframes/esden/calib/asp21-018.xml"/>
-
   <section name="IMU" prefix="IMU_">
     <define name="ACCEL_X_NEUTRAL" value="11"/>
     <define name="ACCEL_Y_NEUTRAL" value="11"/>
@@ -110,9 +108,10 @@
 
   <section name="AHRS" prefix="AHRS_">
     <!-- values used if no GPS fix, on 3D fix is update by geo_mag module -->
-    <define name="H_X" value=" 0.31368011"/>
-    <define name="H_Y" value=" 0.06004278"/>
-    <define name="H_Z" value=" 0.94762844"/>
+    <!-- Moscow East -->
+    <define name="H_X" value=" 0.313673"/>
+    <define name="H_Y" value=" 0.0600498"/>
+    <define name="H_Z" value=" 0.94763"/>
   </section>
 
   <section name="STABILIZATION_RATE" prefix="STABILIZATION_RATE_">
