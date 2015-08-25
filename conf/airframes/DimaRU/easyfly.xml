@@ -159,12 +159,12 @@
 
   <section name="STABILIZATION_RATE" prefix="STABILIZATION_RATE_">
 
-    <define name="SP_MAX_P" value="10000"/>
-    <define name="SP_MAX_Q" value="10000"/>
-    <define name="SP_MAX_R" value="10000"/>
-
+    <define name="SP_MAX_P" value="9600"/>
+    <define name="SP_MAX_Q" value="9600"/>
+    <define name="SP_MAX_R" value="9600"/>
+ 
     <define name="GAIN_P" value="400"/>
-    <define name="GAIN_Q" value="400"/>
+    <define name="GAIN_Q" value="400"/>  <!-- NOT TESTED -->
     <define name="GAIN_R" value="350"/>
 
   </section>
@@ -172,8 +172,8 @@
   <section name="STABILIZATION_ATTITUDE" prefix="STABILIZATION_ATTITUDE_">
 
     <!-- setpoints -->
-    <define name="SP_MAX_PHI"     value="45." unit="deg"/>
-    <define name="SP_MAX_THETA"   value="45." unit="deg"/>
+    <define name="SP_MAX_PHI"     value="40." unit="deg"/>
+    <define name="SP_MAX_THETA"   value="40." unit="deg"/>
     <define name="SP_MAX_PSI"     value="45."  unit="deg"/>
     <define name="SP_MAX_R"       value="90." unit="deg/s"/>
     <define name="SP_MAX_P"       value="90." unit="deg/s"/>
@@ -181,56 +181,78 @@
     <define name="DEADBAND_A"     value="250"/>
 
     <!-- reference -->
-    <define name="REF_OMEGA_P"  value="800" unit="deg/s"/>
-    <define name="REF_ZETA_P"   value="0.85"/>
-    <define name="REF_MAX_P"    value="400." unit="deg/s"/>
-    <define name="REF_MAX_PDOT" value="RadOfDeg(8000.)"/>
+    <define name="REF_OMEGA_P"  value="720" unit="deg/s"/> <!--divide by 360 to obtain bandwidth in Hz (2Hz) -->
+    <define name="REF_ZETA_P"   value="0.9"/> <!--1.2 -->
+    <define name="REF_MAX_P"    value="90." unit="deg/s"/> <!-- maximum angular rate reference -->
+    <define name="REF_MAX_PDOT" value="RadOfDeg(8000.)"/>   <!-- maximum angular acceleration reference -->
 
-    <define name="REF_OMEGA_Q"  value="800" unit="deg/s"/>
-    <define name="REF_ZETA_Q"   value="0.85"/>
-    <define name="REF_MAX_Q"    value="400." unit="deg/s"/>
+    <define name="REF_OMEGA_Q"  value="720" unit="deg/s"/>
+    <define name="REF_ZETA_Q"   value="0.9"/> <!--1.2-->
+    <define name="REF_MAX_Q"    value="90." unit="deg/s"/> 
     <define name="REF_MAX_QDOT" value="RadOfDeg(8000.)"/>
 
-    <define name="REF_OMEGA_R"  value="500" unit="deg/s"/>
-    <define name="REF_ZETA_R"   value="0.85"/>
+    <define name="REF_OMEGA_R"  value="360" unit="deg/s"/><!--was720-->
+    <define name="REF_ZETA_R"   value="0.9"/>  <!--1.2-->
     <define name="REF_MAX_R"    value="90." unit="deg/s"/>
-    <define name="REF_MAX_RDOT" value="RadOfDeg(900.)"/>
+    <define name="REF_MAX_RDOT" value="RadOfDeg(1800.)"/> 
+  
+<!-- feedback -->
+    <define name="PHI_PGAIN"  value="1000"/>  <!--1000-->
+    <define name="PHI_DGAIN"  value="450"/>  <!--500-->
+    <define name="PHI_IGAIN"  value="50"/>   <!--400-->
 
-    <!-- feedback -->
-    <define name="PHI_PGAIN"  value="1000"/>
-    <define name="PHI_DGAIN"  value="400"/>
-    <define name="PHI_IGAIN"  value="200"/>
+    <define name="THETA_PGAIN"  value="1000"/> <!--1000-->
+    <define name="THETA_DGAIN"  value="450"/>  <!--500-->
+    <define name="THETA_IGAIN"  value="50"/>  <!--400-->
 
-    <define name="THETA_PGAIN"  value="1000"/>
-    <define name="THETA_DGAIN"  value="400"/>
-    <define name="THETA_IGAIN"  value="200"/>
+    <define name="PSI_PGAIN"  value="2000"/>
+    <define name="PSI_DGAIN"  value="1000"/>
+    <define name="PSI_IGAIN"  value="300"/>
 
-    <define name="PSI_PGAIN"  value="500"/>
-    <define name="PSI_DGAIN"  value="300"/>
-    <define name="PSI_IGAIN"  value="10"/>
-
-    <!-- feedforward -->
-    <define name="PHI_DDGAIN"   value=" 300"/>
-    <define name="THETA_DDGAIN" value=" 300"/>
-    <define name="PSI_DDGAIN"   value=" 300"/>
+ <!-- feedforward -->
+    <define name="PHI_DDGAIN"   value="0"/>
+    <define name="THETA_DDGAIN" value="0"/>
+    <define name="PSI_DDGAIN"   value="100"/> 
 
     <define name="PHI_AGAIN"   value="0"/>
     <define name="THETA_AGAIN" value="0"/>
     <define name="PSI_AGAIN"   value="0"/>
   </section>
 
- <section name="GUIDANCE_V" prefix="GUIDANCE_V_">
-   <define name="HOVER_KP"    value="400"/>
-   <define name="HOVER_KD"    value="350"/>
-   <define name="HOVER_KI"    value="144"/>
-   <define name="GUIDANCE_V_NOMINAL_HOVER_THROTTLE" value ="0.9"/>
+  <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
+   <define name="USE_REF" value="1"/>                   <!-- Use Reference Generator -->
+   <define name="REF_MAX_SPEED" value="4"/>             <!--reference generator max speed -->
+   <define name="REF_MAX_ACCEL" value="1.0"/>           <!--reference generator max acceleration-->
+   <define name="REF_OMEGA"  value="RadOfDeg(18.)"/>    <!-- reference generator bandwidth, divide by 360 to obtain bandwidth in Hz  (0.05Hz) -->
+   <define name="REF_ZETA"  value="0.9"/>               <!-- reference generator damping-->
+   <define name="MAX_BANK" value="35" unit="deg"/>      <!--max bank setpoint-->
+   <define name="PGAIN" value="80"/> <!--90/65/90/30 -->
+   <define name="DGAIN" value="120"/> <!--90/120/70 -->
+   <define name="IGAIN" value="20"/><!--10/20-->
   </section>
 
- <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
-   <define name="PGAIN" value="50"/>
-   <define name="DGAIN" value="50"/>
-   <define name="IGAIN" value="0"/>
- </section>
+ <section name="GUIDANCE_V" prefix="GUIDANCE_V_">
+   <define name="REF_OMEGA" value="RadOfDeg(36.)"/>  <!--reference generator bandwidth, (0.1Hz)-->
+   <define name="REF_TAU" value="1"/>  <!--(0.25) constante de temps generateur de consignes Vz-->
+   <define name="MIN_ERR_Z"   value="POS_BFP_OF_REAL(-3.)"/>   <!-- (was -10) altitude error saturation-->
+   <define name="MAX_ERR_Z"   value="POS_BFP_OF_REAL( 3.)"/>   <!-- (was 10) altitude error saturation-->
+   <define name="MIN_ERR_ZD"  value="SPEED_BFP_OF_REAL(-3.)"/> <!-- (was -10) vz error saturation-->
+   <define name="MAX_ERR_ZD"  value="SPEED_BFP_OF_REAL( 3.)"/> <!-- (was 10) vz  error saturation-->
+   <define name="MAX_SUM_ERR" value="2000000"/>
+   <define name="REF_MIN_ZDD"  value="-1"/>  <!-- (was -3) reference generator min acceleration--->
+   <define name="REF_MAX_ZDD"  value=" 1"/> <!--  (was 3) reference generator max acceleration--->
+   <define name="REF_MIN_ZD"   value="-3"/> <!--(was -1.5)reference generator min speed--->
+   <define name="REF_MAX_ZD"   value=" 3"/> <!-- (was 1.5)reference generator max speed--->
+   <define name="HOVER_KP"    value="120"/> <!--100-->
+   <define name="HOVER_KD"    value="80"/> <!--70-->
+   <define name="HOVER_KI"    value="10"/>
+   <!-- 1.5m/s for full stick : BOOZ_SPEED_I_OF_F(1.5) / (MAX_PPRZ/2) -->
+   <define name="RC_CLIMB_COEF" value ="163"/>
+   <!-- BOOZ_SPEED_I_OF_F(1.5) * 20% -->
+   <define name="RC_CLIMB_DEAD_BAND" value ="160000"/>
+   <define name="ADAPT_INITIAL_HOVER_THROTTLE" value ="0.5"/>
+   <!--define name="GUIDANCE_V_NOMINAL_HOVER_THROTTLE" value ="0.9"/-->
+  </section>
 
  <section name="SIMULATOR" prefix="NPS_">
    <define name="ACTUATOR_NAMES"  value="{&quot;front_motor&quot;, &quot;back_motor&quot;, &quot;right_motor&quot;, &quot;left_motor&quot;}"/>
