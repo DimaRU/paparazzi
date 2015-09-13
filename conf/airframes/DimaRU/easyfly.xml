@@ -12,12 +12,12 @@
 <airframe name="easyfly">
     
   <firmware name="rotorcraft">
-    <target name="ap" board="lisa_m_2.0">
+    <target name="ap" board="lisa_mx_2.0">
       <subsystem name="radio_control" type="sbus">
         <configure name="SBUS_PORT" value="UART1"/>
       </subsystem>
       <configure name="LISA_M_BARO" value="BARO_MS5611_SPI"/>
-      <configure name="NO_LUFTBOOT" value="0"/>
+      <configure name="HAS_LUFTBOOT" value="0"/>
     </target>
 
     <target name="nps" board="pc">
@@ -47,10 +47,10 @@
 
   <!-- DJI E300 ESC 1120-1920 -->
   <servos driver="Pwm">
-    <servo name="TOP_LEFT"     no="0" min="1000" neutral="1120" max="1920"/>
-    <servo name="TOP_RIGHT"    no="1" min="1000" neutral="1120" max="1920"/>
-    <servo name="BOTTOM_RIGHT" no="2" min="1000" neutral="1120" max="1920"/>
-    <servo name="BOTTOM_LEFT"  no="3" min="1000" neutral="1120" max="1920"/>
+    <servo name="NW"   no="0" min="1000" neutral="1120" max="1920"/>
+    <servo name="NE"   no="1" min="1000" neutral="1120" max="1920"/>
+    <servo name="SE"   no="2" min="1000" neutral="1120" max="1920"/>
+    <servo name="SW"   no="3" min="1000" neutral="1120" max="1920"/>
   </servos>
 
   <commands>
@@ -62,10 +62,10 @@
 
   <command_laws>
     <call fun="motor_mixing_run(autopilot_motors_on,FALSE,values)"/>
-    <set servo="TOP_LEFT"     value="motor_mixing.commands[0]"/>
-    <set servo="TOP_RIGHT"    value="motor_mixing.commands[1]"/>
-    <set servo="BOTTOM_RIGHT" value="motor_mixing.commands[2]"/>
-    <set servo="BOTTOM_LEFT"  value="motor_mixing.commands[3]"/>
+    <set servo="NW" value="motor_mixing.commands[0]"/>
+    <set servo="NE" value="motor_mixing.commands[1]"/>
+    <set servo="SE" value="motor_mixing.commands[2]"/>
+    <set servo="SW" value="motor_mixing.commands[3]"/>
   </command_laws>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
@@ -255,8 +255,21 @@
   </section>
 
  <section name="SIMULATOR" prefix="NPS_">
-   <define name="ACTUATOR_NAMES"  value="{&quot;front_motor&quot;, &quot;back_motor&quot;, &quot;right_motor&quot;, &quot;left_motor&quot;}"/>
-   <define name="SENSORS_PARAMS" value="&quot;nps_sensors_params_default.h&quot;"/>
+   <define name="ACTUATOR_NAMES" value="nw_motor, ne_motor, se_motor, sw_motor" type="string[]"/>
+   <define name="JSBSIM_MODEL" value="simple_x_quad" type="string"/>
+   <define name="SENSORS_PARAMS" value="nps_sensors_params_default.h" type="string"/>
+
+   <define name="JS_AXIS_ROLL" value="0"/>	<!-- Use joystick axis 0 for roll -->
+   <define name="JS_AXIS_PITCH" value="1"/>	<!-- Use joystick axis 1 for pitch (default) -->
+   <define name="JS_AXIS_YAW" value="2"/>	<!-- Use joystick axis 2 for yaw -->
+   <define name="JS_AXIS_THROTTLE" value="3"/>	<!-- Use joystick axis 3 for throttle -->
+   <define name="JS_AXIS_MODE" value="6"/>	<!-- Use joystick axis 6 for mode switch -->
+
+   <define name="JS_AXIS_ROLL_REVERSE" value="0"/>
+   <define name="JS_AXIS_PITCH_REVERSE" value="0"/>
+   <define name="JS_AXIS_YAW_REVERSE" value="0"/>
+   <define name="JS_AXIS_THROTTLE_REVERSE" value="0"/>
+
  </section>
 
  <modules main_freq="512">
