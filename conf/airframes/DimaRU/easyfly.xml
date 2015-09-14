@@ -39,7 +39,7 @@
       <configure name="GPS_LED"           value="3"/>
     </subsystem>
     <subsystem name="stabilization" type="int_quat"/>
-    <subsystem name="ahrs"          type="int_cmpl_quat"/>
+    <subsystem name="ahrs"          type="float_mlkf"/>
     <subsystem name="ins"/>
     <define name="USE_ADC"/>
     <define name="USE_ADC_3"/>    <!-- motor current-->
