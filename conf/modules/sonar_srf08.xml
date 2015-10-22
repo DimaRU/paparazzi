@@ -1,0 +1,28 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="sonar">
+  <doc>
+    <description>
+     SRF08 i2c Sonar driver.
+     Reads an anlog sonar sensor and outputs sonar distance in [m]
+    </description>
+    <define name="USE_SONAR" value="" description="activate use of sonar in INS extended filter (only rotorcraft)"/>
+  </doc>
+  <header>
+    <file name="sonar_srf08.h"/>
+  </header>
+  
+  <init fun="srf08_init()"/>
+  <periodic fun="srf08_initiate_ranging()" freq="10"/>
+  <!-- 65ms since initiate_ranging() (the spec ask for 65ms),
+       delay="4", 60Hz, 4x 16.7ms = 66.7ms -->
+  <periodic fun="srf08_receive()" freq="10" delay="4"/>
+  <event fun="srf08_event()"/>
+
+  <makefile target="ap|sim">
+    <file name="sonar_srf08.c"/>
+  </makefile>
+  <makefile target="ap">
+    <define name="SRF08_I2C_DEV" value="i2c1"/>
+  </makefile>
+</module>

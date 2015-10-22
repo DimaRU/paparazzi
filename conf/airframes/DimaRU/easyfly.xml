@@ -16,8 +16,9 @@
       <subsystem name="radio_control" type="sbus">
         <configure name="SBUS_PORT" value="UART1"/>
       </subsystem>
-      <configure name="LISA_M_BARO" value="BARO_MS5611_SPI"/>
+      <configure name="LISA_MX_BARO" value="BARO_BOARD_BMP085" /> 
       <configure name="HAS_LUFTBOOT" value="0"/>
+      <define name="USE_I2C1"/> 
     </target>
 
     <target name="nps" board="pc">
@@ -28,7 +29,7 @@
     <subsystem name="motor_mixing"/>
     <subsystem name="actuators"     type="pwm">
       <define name="SERVO_HZ" value="400"/>
-      <define name="USE_SERVOS_7AND8"/>
+      <!--define name="USE_SERVOS_7AND8"/-->
     </subsystem>
 
     <subsystem name="telemetry"     type="transparent"/>
@@ -40,7 +41,19 @@
     </subsystem>
     <subsystem name="stabilization" type="int_quat"/>
     <subsystem name="ahrs"          type="float_mlkf"/>
-    <subsystem name="ins"/>
+
+    <subsystem name="ins" type="extended"/>
+    <section name="INS" prefix="INS_">
+        <define name="USE_SONAR" value="TRUE"/>
+        <define name="SONAR_ID" value="1"/>
+        <define name="SONAR_UPDATE_ON_AGL" value="TRUE"/>
+        <define name="VFF_R_SONAR_OF_M" value="0.1"/>       
+        <define name="SONAR_MIN_RANGE" value="0.1"/>
+        <define name="SONAR_MAX_RANGE" value="6.00"/>
+        <define name="SONAR_OFFSET" value="0.10"/>
+    </section>
+    <!--define name="KILL_ON_GROUND_DETECT" value="TRUE"/-->
+
     <define name="USE_ADC"/>
     <define name="USE_ADC_3"/>    <!-- motor current-->
   </firmware>
@@ -68,17 +81,20 @@
     <set servo="SW" value="motor_mixing.commands[3]"/>
   </command_laws>
 
+   <!-- Time cross layout (X), with order NW (CCW), NE (CW), SE (CCW), SW (CW) -->
   <section name="MIXING" prefix="MOTOR_MIXING_">
     <define name="TRIM_ROLL" value="0"/>
     <define name="TRIM_PITCH" value="0"/>
     <define name="TRIM_YAW" value="0"/>
+    <!--define name="TYPE" value="QUAD_X"/>
+    <define name="MOTOR_MIXING_REVERSE" value="TRUE"/-->
     <define name="NB_MOTOR" value="4"/>
     <define name="SCALE" value="256"/>
     
    <!-- Time cross layout (X), with order NW (CCW), NE (CW), SE (CCW), SW (CW) -->
-    <define name="ROLL_COEF"   value="{  256, -256, -256,  256 }"/>
-    <define name="PITCH_COEF"  value="{  256,  256, -256, -256 }"/>
-    <define name="YAW_COEF"    value="{  256, -256,  256, -256 }"/>
+    <define name="ROLL_COEF"   value="{  181, -181, -181,  181 }"/>
+    <define name="PITCH_COEF"  value="{  181,  181, -181, -181 }"/>
+    <define name="YAW_COEF"    value="{  128, -128,  128, -128 }"/>
     <define name="THRUST_COEF" value="{  256,  256,  256,  256 }"/>
   </section>
 
@@ -239,10 +255,10 @@
    <define name="MIN_ERR_ZD"  value="SPEED_BFP_OF_REAL(-3.)"/> <!-- (was -10) vz error saturation-->
    <define name="MAX_ERR_ZD"  value="SPEED_BFP_OF_REAL( 3.)"/> <!-- (was 10) vz  error saturation-->
    <define name="MAX_SUM_ERR" value="2000000"/>
-   <define name="REF_MIN_ZDD"  value="-1"/>  <!-- (was -3) reference generator min acceleration--->
-   <define name="REF_MAX_ZDD"  value=" 1"/> <!--  (was 3) reference generator max acceleration--->
-   <define name="REF_MIN_ZD"   value="-3"/> <!--(was -1.5)reference generator min speed--->
-   <define name="REF_MAX_ZD"   value=" 3"/> <!-- (was 1.5)reference generator max speed--->
+   <define name="REF_MIN_ZDD"  value="-1"/>  <!-- (was -3) reference generator min acceleration-->
+   <define name="REF_MAX_ZDD"  value=" 1"/> <!--  (was 3) reference generator max acceleration-->
+   <define name="REF_MIN_ZD"   value="-3"/> <!--(was -1.5)reference generator min speed-->
+   <define name="REF_MAX_ZD"   value=" 3"/> <!-- (was 1.5)reference generator max speed-->
    <define name="HOVER_KP"    value="120"/> <!--100-->
    <define name="HOVER_KD"    value="80"/> <!--70-->
    <define name="HOVER_KI"    value="10"/>
@@ -264,11 +280,10 @@
    <define name="JS_AXIS_YAW" value="2"/>	<!-- Use joystick axis 2 for yaw -->
    <define name="JS_AXIS_THROTTLE" value="3"/>	<!-- Use joystick axis 3 for throttle -->
    <define name="JS_AXIS_MODE" value="6"/>	<!-- Use joystick axis 6 for mode switch -->
-
-   <define name="JS_AXIS_ROLL_REVERSE" value="0"/>
-   <define name="JS_AXIS_PITCH_REVERSE" value="0"/>
-   <define name="JS_AXIS_YAW_REVERSE" value="0"/>
-   <define name="JS_AXIS_THROTTLE_REVERSE" value="0"/>
+   <define name="JS_AXIS_ROLL_REVERSED" value="0"/>
+   <define name="JS_AXIS_PITCH_REVERSED" value="0"/>
+   <define name="JS_AXIS_YAW_REVERSED" value="0"/>
+   <define name="JS_AXIS_THROTTLE_REVERSED" value="1"/>
 
  </section>
 
@@ -278,6 +293,9 @@
       <define name="SAFETY_WARNING_LED" value="BODY"/>
    </load>
    <load name="send_imu_mag_current.xml"/>
+   <load name="sonar_srf08.xml">
+      <define name="SENSOR_SYNC_SEND_SONAR"/> 
+   </load>
 </modules>
 
 </airframe>
